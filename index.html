@@ -53,7 +53,7 @@
       background: #005fa3;
       transform: scale(1.05);
     }
-    input {
+    input, select {
       padding: 0.6rem;
       margin: 0.5rem auto;
       border-radius: 6px;
@@ -109,7 +109,7 @@
 
     <section id="rutbex-page">
       <h2>RütbeX Oyunları</h2>
-      <div>
+      <div id="rutbex-buttons">
         <button onclick="showPlatforms('Coin')">RütbeX:Coin</button>
         <button onclick="showPlatforms('TDW')">RütbeX:TDW</button>
         <button onclick="showPlatforms('Shark')">RütbeX:Shark</button>
@@ -122,6 +122,10 @@
     <section id="admin-panel">
       <h2>Admin Paneli</h2>
       <form onsubmit="addGame(event)">
+        <select id="game-series" required>
+          <option value="rutbex">RütbeX</option>
+          <option value="diğer">Diğer</option>
+        </select>
         <input type="text" id="game-name" placeholder="Oyun Adı" required />
         <input type="url" id="android-link" placeholder="Android Linki" required />
         <input type="url" id="ios-link" placeholder="iOS Linki" required />
@@ -138,21 +142,26 @@
   </footer>
 
   <script>
+    const addedGames = [];
+
     function goToRutbex() {
       document.getElementById('main-page').style.display = 'none';
       document.getElementById('rutbex-page').style.display = 'block';
+      updateRutbexButtons();
     }
 
     function showPlatforms(game) {
-      const platforms = `
+      const platforms = addedGames.find(g => g.name === game);
+      if (!platforms) return alert("Bu oyun için veri bulunamadı.");
+      const html = `
         <h3>${game} Platformları</h3>
         <ul>
-          <li><a href="#">Android</a></li>
-          <li><a href="#">iOS</a></li>
-          <li><a href="#">Windows</a></li>
-          <li><a href="#">macOS</a></li>
+          <li><a href="${platforms.android}" target="_blank">Android</a></li>
+          <li><a href="${platforms.ios}" target="_blank">iOS</a></li>
+          <li><a href="${platforms.windows}" target="_blank">Windows</a></li>
+          <li><a href="${platforms.macos}" target="_blank">macOS</a></li>
         </ul>`;
-      document.getElementById('platform-links').innerHTML = platforms;
+      document.getElementById('platform-links').innerHTML = html;
     }
 
     function promptAdminAccess() {
@@ -166,7 +175,27 @@
 
     function addGame(event) {
       event.preventDefault();
-      alert('Yeni oyun eklendi (demo).');
+      const name = document.getElementById('game-name').value;
+      const series = document.getElementById('game-series').value;
+      const android = document.getElementById('android-link').value;
+      const ios = document.getElementById('ios-link').value;
+      const windows = document.getElementById('windows-link').value;
+      const macos = document.getElementById('macos-link').value;
+
+      addedGames.push({ name, android, ios, windows, macos, series });
+      alert(`${name} oyunu eklendi!`);
+      updateRutbexButtons();
+    }
+
+    function updateRutbexButtons() {
+      const btnContainer = document.getElementById("rutbex-buttons");
+      btnContainer.innerHTML = "";
+      addedGames.filter(g => g.series === "rutbex").forEach(g => {
+        const btn = document.createElement("button");
+        btn.innerText = `RütbeX:${g.name}`;
+        btn.onclick = () => showPlatforms(g.name);
+        btnContainer.appendChild(btn);
+      });
     }
   </script>
 </body>

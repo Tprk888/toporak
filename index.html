@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Toporak</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -32,12 +30,8 @@
       max-width: 900px;
       margin: auto;
     }
-    section {
-      margin-bottom: 3rem;
-    }
-    h2, h3 {
-      color: #00ffc8;
-    }
+    section { margin-bottom: 3rem; }
+    h2, h3 { color: #00ffc8; }
     button {
       padding: 1rem 2rem;
       margin: 0.5rem;
@@ -62,26 +56,15 @@
       max-width: 400px;
       display: block;
     }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    ul li {
-      margin: 0.3rem;
-    }
+    ul { list-style: none; padding: 0; }
+    ul li { margin: 0.3rem; }
     a {
       color: #ffcc00;
       text-decoration: none;
     }
-    a:hover {
-      text-decoration: underline;
-    }
-    #rutbex-page, #admin-panel {
-      display: none;
-    }
-    #platform-links {
-      margin-top: 1.5rem;
-    }
+    a:hover { text-decoration: underline; }
+    #rutbex-page, #admin-panel { display: none; }
+    #platform-links { margin-top: 1.5rem; }
     #secret-admin-btn {
       position: absolute;
       bottom: 2px;
@@ -99,7 +82,6 @@
   <header>
     <h1>Toporak</h1>
   </header>
-
   <main>
     <section id="main-page">
       <h2>2025 yılında kurulan Toporak, yazılım ve teknoloji geliştirmeye odaklanmıştır.</h2>
@@ -109,13 +91,7 @@
 
     <section id="rutbex-page">
       <h2>RütbeX Oyunları</h2>
-      <div id="rutbex-buttons">
-        <button onclick="showPlatforms('Coin')">RütbeX:Coin</button>
-        <button onclick="showPlatforms('TDW')">RütbeX:TDW</button>
-        <button onclick="showPlatforms('Shark')">RütbeX:Shark</button>
-        <button onclick="showPlatforms('WDG')">RütbeX:WDG</button>
-        <button onclick="showPlatforms('JumpX')">RütbeX:JumpX</button>
-      </div>
+      <div id="rutbex-buttons"></div>
       <div id="platform-links"></div>
     </section>
 
@@ -135,14 +111,12 @@
       </form>
     </section>
   </main>
-
   <footer>
     <small>&copy; 2025 Toporak</small>
     <button id="secret-admin-btn" onclick="promptAdminAccess()">Admin</button>
   </footer>
-
   <script>
-    const addedGames = [];
+    const addedGames = JSON.parse(localStorage.getItem("addedGames")) || [];
 
     function goToRutbex() {
       document.getElementById('main-page').style.display = 'none';
@@ -166,7 +140,7 @@
 
     function promptAdminAccess() {
       const code = prompt("Admin kodunu gir:");
-      if (code === "29042113") {
+      if (code === "29042113" || code === "66698688") {
         document.getElementById('admin-panel').style.display = 'block';
       } else {
         alert("Hatalı kod!");
@@ -181,8 +155,8 @@
       const ios = document.getElementById('ios-link').value;
       const windows = document.getElementById('windows-link').value;
       const macos = document.getElementById('macos-link').value;
-
       addedGames.push({ name, android, ios, windows, macos, series });
+      localStorage.setItem("addedGames", JSON.stringify(addedGames));
       alert(`${name} oyunu eklendi!`);
       updateRutbexButtons();
     }
@@ -197,6 +171,8 @@
         btnContainer.appendChild(btn);
       });
     }
+
+    updateRutbexButtons();
   </script>
 </body>
 </html>

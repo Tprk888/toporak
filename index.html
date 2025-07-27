@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toporak</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #111;
+      color: #eee;
+    }
+    header, footer {
+      background: #222;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    button {
+      padding: 0.7rem 1.5rem;
+      margin: 0.5rem;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #rutbex-page, #admin-panel {
+      display: none;
+      padding: 2rem;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Toporak</h1>
+  </header>
+  
+  <main>
+    <section id="main-page">
+      <h2>2025 yılında kurulan Toporak, yazılım ve teknoloji geliştirmeye odaklanmıştır.</h2>
+      <h3>Oyun Serilerimiz</h3>
+      <button onclick="goToRutbex()">RütbeX</button>
+    </section>
+
+    <section id="rutbex-page">
+      <h2>RütbeX Oyunları</h2>
+      <div>
+        <button onclick="showPlatforms('Coin')">RütbeX:Coin</button>
+        <button onclick="showPlatforms('TDW')">RütbeX:TDW</button>
+        <button onclick="showPlatforms('Shark')">RütbeX:Shark</button>
+        <button onclick="showPlatforms('WDG')">RütbeX:WDG</button>
+        <button onclick="showPlatforms('JumpX')">RütbeX:JumpX</button>
+      </div>
+      <div id="platform-links"></div>
+    </section>
+
+    <section id="admin-panel" class="hidden">
+      <h2>Admin Paneli (Gizli)</h2>
+      <form onsubmit="addGame(event)">
+        <input type="text" id="game-name" placeholder="Oyun Adı" required />
+        <input type="url" id="android-link" placeholder="Android Linki" required />
+        <input type="url" id="ios-link" placeholder="iOS Linki" required />
+        <input type="url" id="windows-link" placeholder="Windows Linki" required />
+        <input type="url" id="macos-link" placeholder="macOS Linki" required />
+        <button type="submit">Ekle</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <small>&copy; 2025 Toporak</small>
+  </footer>
+
+  <script>
+    function goToRutbex() {
+      document.getElementById('main-page').style.display = 'none';
+      document.getElementById('rutbex-page').style.display = 'block';
+    }
+
+    function showPlatforms(game) {
+      const platforms = `
+        <h3>${game} Platformları</h3>
+        <ul>
+          <li><a href="#">Android</a></li>
+          <li><a href="#">iOS</a></li>
+          <li><a href="#">Windows</a></li>
+          <li><a href="#">macOS</a></li>
+        </ul>`;
+      document.getElementById('platform-links').innerHTML = platforms;
+    }
+
+    // Gizli admin panel açıcı
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.altKey && e.key === 'A') {
+        document.getElementById('admin-panel').classList.remove('hidden');
+      }
+    });
+
+    function addGame(event) {
+      event.preventDefault();
+      // Şu anda bu sistem sadece gösterimlik. Gerçek sistemde backend gerekir.
+      alert('Yeni oyun eklendi (demo).');
+    }
+  </script>
+</body>
+</html>

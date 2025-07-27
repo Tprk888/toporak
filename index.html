@@ -5,259 +5,234 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Toporak</title>
   <style>
-    * { box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
+      background: #1e1e2f;
+      color: #f0f0f0;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom right, #141e30, #243b55);
-      color: #f0f0f0;
     }
     header, footer {
       background: #111;
-      padding: 1.5rem;
+      padding: 1rem;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-      color: #00d4ff;
-    }
-    main {
-      padding: 3rem 2rem;
-      text-align: center;
-      max-width: 900px;
-      margin: auto;
-    }
-    section { margin-bottom: 3rem; }
-    h2, h3 { color: #00ffc8; }
+    h1, h2, h3 { color: #00e6e6; }
     button {
-      padding: 1rem 2rem;
-      margin: 0.5rem;
-      background: #0077cc;
+      margin: 0.3rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: #0077cc;
       color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.1rem;
+      border-radius: 5px;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-    button:hover {
-      background: #005fa3;
-      transform: scale(1.05);
-    }
-    input, select {
-      padding: 0.6rem;
-      margin: 0.5rem auto;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 80%;
-      max-width: 400px;
+    button:hover { background-color: #005fa3; }
+    input, select, textarea {
       display: block;
+      margin: 0.5rem auto;
+      padding: 0.5rem;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 4px;
     }
-    ul { list-style: none; padding: 0; }
-    ul li { margin: 0.3rem; }
-    a {
-      color: #ffcc00;
-      text-decoration: none;
+    #series-buttons, #series-content { text-align: center; margin: 1rem; }
+    #search-input { margin: 1rem auto; display: block; width: 80%; max-width: 500px; }
+    .game-box {
+      border: 1px solid #444;
+      padding: 1rem;
+      margin: 1rem auto;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 8px;
+      background: #2b2b3a;
     }
-    a:hover { text-decoration: underline; }
-    #series-page, #admin-panel { display: none; }
-    #platform-links { margin-top: 1.5rem; }
+    #admin-panel { display: none; padding: 1rem; }
+    .hidden { display: none; }
     #secret-admin-btn {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
       background: transparent;
-      border: none;
       color: transparent;
+      border: none;
       width: 10px;
       height: 10px;
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
       cursor: pointer;
-    }
-    .game-entry {
-      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Toporak</h1>
-  </header>
-  <main>
-    <section id="main-page">
-      <h2>2025 yılında kurulan Toporak, yazılım ve teknoloji geliştirmeye odaklanmıştır.</h2>
-      <h3>Oyun Serilerimiz</h3>
-      <div id="series-buttons"></div>
-    </section>
 
-    <section id="series-page">
-      <h2 id="series-title">Seri Oyunları</h2>
-      <div id="series-buttons-container"></div>
-      <div id="platform-links"></div>
-    </section>
+<header>
+  <h1>Toporak</h1>
+  <p>2025 yılında yazılım ve oyun geliştirme için kuruldu</p>
+</header>
 
-    <section id="admin-panel">
-      <h2>Admin Paneli</h2>
-      <form onsubmit="addGame(event)">
-        <input type="text" id="new-series" placeholder="Yeni Seri Ekle (opsiyonel)" />
-        <select id="game-series"></select>
-        <input type="text" id="game-name" placeholder="Oyun Adı" required />
-        <input type="url" id="android-link" placeholder="Android Linki" required />
-        <input type="url" id="ios-link" placeholder="iOS Linki" required />
-        <input type="url" id="windows-link" placeholder="Windows Linki" required />
-        <input type="url" id="macos-link" placeholder="macOS Linki" required />
-        <button type="submit">Ekle</button>
-      </form>
-    </section>
-  </main>
-  <footer>
-    <small>&copy; 2025 Toporak</small>
-    <button id="secret-admin-btn" onclick="promptAdminAccess()">Admin</button>
-  </footer>
-  <script>
-    let addedGames = JSON.parse(localStorage.getItem("addedGames")) || [];
+<input type="text" id="search-input" placeholder="Oyun veya seri ara..." />
 
-    function saveGames() {
-      localStorage.setItem("addedGames", JSON.stringify(addedGames));
-    }
+<div id="series-buttons"></div>
+<div id="series-content"></div>
 
-    function updateSeriesButtons() {
-      const container = document.getElementById("series-buttons");
-      container.innerHTML = "";
-      const seriesSet = new Set(addedGames.map(g => g.series));
-      seriesSet.forEach(series => {
-        const btn = document.createElement("button");
-        btn.innerText = series;
-        btn.onclick = () => goToSeries(series);
-        container.appendChild(btn);
-      });
+<div id="admin-panel">
+  <h2>Admin Panel</h2>
+  <input type="text" id="new-series" placeholder="Yeni Seri (opsiyonel)" />
+  <select id="existing-series">
+    <option value="">Seri Seç</option>
+  </select>
+  <input type="text" id="game-name" placeholder="Oyun Adı" />
+  <textarea id="game-note" placeholder="Not / Açıklama"></textarea>
+  <input type="url" id="android-link" placeholder="Android Linki" />
+  <input type="url" id="ios-link" placeholder="iOS Linki" />
+  <input type="url" id="windows-link" placeholder="Windows Linki" />
+  <input type="url" id="macos-link" placeholder="macOS Linki" />
+  <button onclick="addGame()">Oyun Ekle</button>
+</div>
 
-      const select = document.getElementById("game-series");
-      select.innerHTML = "";
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.innerText = "Seri Seçin";
-      select.appendChild(defaultOption);
-      seriesSet.forEach(series => {
-        const option = document.createElement("option");
-        option.value = series;
-        option.innerText = series;
-        select.appendChild(option);
-      });
-    }
+<footer>
+  <small>© 2025 Toporak</small>
+  <button id="secret-admin-btn" onclick="promptAdmin()">Admin</button>
+</footer>
 
-    function goToSeries(series) {
-      document.getElementById('main-page').style.display = 'none';
-      document.getElementById('series-page').style.display = 'block';
-      document.getElementById('series-title').innerText = `${series} Oyunları`;
-      const btnContainer = document.getElementById("series-buttons-container");
-      btnContainer.innerHTML = "";
-      addedGames.filter(g => g.series === series).forEach(g => {
+<script>
+  let isAdmin = false;
+  let games = JSON.parse(localStorage.getItem("games") || "[]");
+
+  function saveGames() {
+    localStorage.setItem("games", JSON.stringify(games));
+  }
+
+  function render() {
+    const query = document.getElementById("search-input").value.toLowerCase();
+    const seriesList = [...new Set(games.map(g => g.series))];
+    const buttons = document.getElementById("series-buttons");
+    buttons.innerHTML = "";
+    const content = document.getElementById("series-content");
+    content.innerHTML = "";
+
+    seriesList.forEach((series, index) => {
+      if (query && !series.toLowerCase().includes(query)) return;
+
+      const btn = document.createElement("button");
+      btn.innerText = series;
+      btn.onclick = () => showSeries(series);
+      buttons.appendChild(btn);
+
+      if (isAdmin) {
+        const up = document.createElement("button");
+        up.innerText = "⬆";
+        up.onclick = () => moveSeries(index, -1);
+        buttons.appendChild(up);
+
+        const down = document.createElement("button");
+        down.innerText = "⬇";
+        down.onclick = () => moveSeries(index, 1);
+        buttons.appendChild(down);
+      }
+    });
+
+    updateSeriesSelect();
+  }
+
+  function moveSeries(index, direction) {
+    const seriesList = [...new Set(games.map(g => g.series))];
+    const from = seriesList[index];
+    const to = seriesList[index + direction];
+    if (!to) return;
+
+    games.forEach(g => {
+      if (g.series === from) g.series = "__TEMP__";
+      else if (g.series === to) g.series = from;
+    });
+    games.forEach(g => { if (g.series === "__TEMP__") g.series = to; });
+    saveGames();
+    render();
+  }
+
+  function showSeries(series) {
+    const content = document.getElementById("series-content");
+    content.innerHTML = `<h2>${series} Oyunları</h2>`;
+    const seriesGames = games.filter(g => g.series === series);
+
+    seriesGames
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .forEach(g => {
         const div = document.createElement("div");
-        div.className = "game-entry";
-        const btn = document.createElement("button");
-        btn.innerText = g.name;
-        btn.onclick = () => showPlatforms(g.name);
-
-        const editBtn = document.createElement("button");
-        editBtn.innerText = "Düzenle";
-        editBtn.style.marginLeft = "1rem";
-        editBtn.onclick = () => editGame(g);
-
-        const delBtn = document.createElement("button");
-        delBtn.innerText = "Sil";
-        delBtn.style.background = "#cc0033";
-        delBtn.style.marginLeft = "1rem";
-        delBtn.onclick = () => {
-          const code = prompt("Silmek için admin kodunu gir:");
-          if (code === "29042113" || code === "66698688") {
-            deleteGame(g.name);
-          } else {
-            alert("Hatalı kod!");
-          }
-        };
-
-        div.appendChild(btn);
-        div.appendChild(editBtn);
-        div.appendChild(delBtn);
-        btnContainer.appendChild(div);
+        div.className = "game-box";
+        div.innerHTML = `
+          <h3>${g.name}</h3>
+          <p>${g.note || "Açıklama yok"}</p>
+          <p>📅 Eklenme: ${g.date}</p>
+          <p>
+            <a href="${g.android}" target="_blank">Android</a> |
+            <a href="${g.ios}" target="_blank">iOS</a> |
+            <a href="${g.windows}" target="_blank">Windows</a> |
+            <a href="${g.macos}" target="_blank">macOS</a>
+          </p>
+        `;
+        if (isAdmin) {
+          const del = document.createElement("button");
+          del.innerText = "Sil";
+          del.onclick = () => {
+            if (confirm("Silmek istediğine emin misin?")) {
+              games = games.filter(gg => gg !== g);
+              saveGames();
+              render();
+            }
+          };
+          div.appendChild(del);
+        }
+        content.appendChild(div);
       });
+  }
+
+  function updateSeriesSelect() {
+    const select = document.getElementById("existing-series");
+    const unique = [...new Set(games.map(g => g.series))];
+    select.innerHTML = `<option value="">Seri Seç</option>`;
+    unique.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s;
+      opt.innerText = s;
+      select.appendChild(opt);
+    });
+  }
+
+  function addGame() {
+    const name = document.getElementById("game-name").value.trim();
+    const note = document.getElementById("game-note").value.trim();
+    const android = document.getElementById("android-link").value.trim();
+    const ios = document.getElementById("ios-link").value.trim();
+    const windows = document.getElementById("windows-link").value.trim();
+    const macos = document.getElementById("macos-link").value.trim();
+    const newSeries = document.getElementById("new-series").value.trim();
+    const selectedSeries = document.getElementById("existing-series").value;
+    const series = newSeries || selectedSeries;
+    const date = new Date().toISOString().split("T")[0];
+
+    if (!series || !name) return alert("Seri ve oyun adı zorunludur.");
+
+    games.push({ name, note, android, ios, windows, macos, series, date });
+    saveGames();
+    alert("Oyun eklendi!");
+    document.querySelectorAll("#admin-panel input, #admin-panel textarea").forEach(el => el.value = "");
+    render();
+  }
+
+  function promptAdmin() {
+    const code = prompt("Admin kodu:");
+    if (code === "29042113" || code === "66698688") {
+      isAdmin = true;
+      document.getElementById("admin-panel").style.display = "block";
+      render();
+    } else {
+      alert("Hatalı kod");
     }
+  }
 
-    function showPlatforms(game) {
-      const g = addedGames.find(g => g.name === game);
-      if (!g) return alert("Bu oyun için veri bulunamadı.");
-      const html = `
-        <h3>${game} Platformları</h3>
-        <ul>
-          <li><a href="${g.android}" target="_blank">Android</a></li>
-          <li><a href="${g.ios}" target="_blank">iOS</a></li>
-          <li><a href="${g.windows}" target="_blank">Windows</a></li>
-          <li><a href="${g.macos}" target="_blank">macOS</a></li>
-        </ul>`;
-      document.getElementById('platform-links').innerHTML = html;
-    }
+  document.getElementById("search-input").addEventListener("input", render);
 
-    function promptAdminAccess() {
-      const code = prompt("Admin kodunu gir:");
-      if (code === "29042113" || code === "66698688") {
-        document.getElementById('admin-panel').style.display = 'block';
-      } else {
-        alert("Hatalı kod!");
-      }
-    }
-
-    function addGame(event) {
-      event.preventDefault();
-      const name = document.getElementById('game-name').value.trim();
-      const newSeries = document.getElementById('new-series').value.trim();
-      const selectEl = document.getElementById('game-series');
-      const series = newSeries || selectEl.value;
-
-      if (!series) {
-        alert("Lütfen bir seri adı girin veya seçin.");
-        return;
-      }
-
-      const android = document.getElementById('android-link').value.trim();
-      const ios = document.getElementById('ios-link').value.trim();
-      const windows = document.getElementById('windows-link').value.trim();
-      const macos = document.getElementById('macos-link').value.trim();
-
-      addedGames.push({ name, android, ios, windows, macos, series });
-      saveGames();
-      alert(`${name} oyunu "${series}" serisine eklendi!`);
-
-      document.getElementById('game-name').value = "";
-      document.getElementById('android-link').value = "";
-      document.getElementById('ios-link').value = "";
-      document.getElementById('windows-link').value = "";
-      document.getElementById('macos-link').value = "";
-      document.getElementById('new-series').value = "";
-
-      updateSeriesButtons();
-    }
-
-    function deleteGame(name) {
-      addedGames = addedGames.filter(g => g.name !== name);
-      saveGames();
-      updateSeriesButtons();
-    }
-
-    function editGame(game) {
-      document.getElementById('game-name').value = game.name;
-      document.getElementById('android-link').value = game.android;
-      document.getElementById('ios-link').value = game.ios;
-      document.getElementById('windows-link').value = game.windows;
-      document.getElementById('macos-link').value = game.macos;
-      document.getElementById('game-series').value = game.series;
-      deleteGame(game.name);
-      window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    updateSeriesButtons();
-  </script>
+  render();
+</script>
 </body>
 </html>

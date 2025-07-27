@@ -1,608 +1,558 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Toporak Oyun Sitesi</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0; padding: 0;
-      background: linear-gradient(to bottom right, #141e30, #243b55);
-      color: #f0f0f0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    header, footer {
-      background: #111;
-      padding: 1.5rem;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-      color: #00d4ff;
-    }
-    main {
-      flex: 1;
-      padding: 1rem 2rem 4rem;
-      max-width: 900px;
-      margin: auto;
-      width: 100%;
-    }
-    section { margin-bottom: 2rem; }
-    h2, h3 {
-      color: #00ffc8;
-      margin-bottom: 0.5rem;
-    }
-    button {
-      padding: 0.6rem 1.2rem;
-      margin: 0.3rem;
-      background: #0077cc;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    button:hover {
-      background: #005fa3;
-      transform: scale(1.05);
-    }
-    input, select, textarea {
-      padding: 0.6rem;
-      margin: 0.5rem auto;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 80%;
-      max-width: 400px;
-      display: block;
-      font-size: 1rem;
-    }
-    ul { list-style: none; padding: 0; }
-    ul li { margin: 0.3rem 0; }
-    a {
-      color: #ffcc00;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    #series-buttons, #game-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    #series-buttons button, #game-list button {
-      min-width: 90px;
-      font-weight: bold;
-    }
-    #game-details {
-      background: #222;
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #00d4ff88;
-    }
-    #game-details img {
-      max-width: 180px;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #platform-links ul {
-      padding-left: 1.2rem;
-      margin-bottom: 1rem;
-    }
-    #comments {
-      max-height: 200px;
-      overflow-y: auto;
-      background: #111;
-      padding: 0.5rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-    .comment {
-      border-bottom: 1px solid #333;
-      padding: 0.4rem 0;
-      font-size: 0.9rem;
-    }
-    #admin-panel {
-      background: #111;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-top: 2rem;
-      display: none;
-    }
-    #secret-admin-btn {
-      position: fixed;
-      bottom: 5px;
-      right: 5px;
-      width: 12px;
-      height: 12px;
-      background: transparent;
-      border: none;
-      color: transparent;
-      cursor: pointer;
-      z-index: 1000;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      margin-top: 0.8rem;
-      color: #00ffc8;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Toporak</title>
+<style>
+  * {box-sizing: border-box;}
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin:0; padding:0;
+    background: linear-gradient(to bottom right, #141e30, #243b55);
+    color: #f0f0f0;
+  }
+  header, footer {
+    background:#111; padding:1.5rem; text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.5);
+  }
+  header h1 {
+    margin:0; font-size:2.5rem; color:#00d4ff;
+  }
+  main {
+    padding:3rem 2rem; max-width:900px; margin:auto; text-align:center;
+  }
+  section {margin-bottom:3rem;}
+  h2,h3 {color:#00ffc8;}
+  button {
+    padding:1rem 2rem; margin:0.5rem;
+    background:#0077cc; color:#fff;
+    border:none; border-radius:10px;
+    font-size:1.1rem; cursor:pointer;
+    transition: all 0.3s ease;
+  }
+  button:hover {
+    background:#005fa3; transform: scale(1.05);
+  }
+  input, select, textarea {
+    padding:0.6rem; margin:0.5rem auto;
+    border-radius:6px; border:1px solid #ccc;
+    width: 80%; max-width:400px;
+    display: block;
+    font-size:1rem;
+  }
+  ul {list-style:none; padding:0;}
+  ul li {margin:0.3rem;}
+  a {
+    color:#ffcc00; text-decoration:none;
+  }
+  a:hover {text-decoration:underline;}
+  #series-page, #admin-panel, #game-detail-page {
+    display:none;
+  }
+  #secret-admin-btn {
+    position:absolute; bottom:2px; right:2px;
+    background:transparent; border:none;
+    color:transparent; width:10px; height:10px;
+    cursor:pointer;
+  }
+  .game-entry {
+    margin-top:1rem;
+    display:flex; justify-content:center; align-items:center;
+  }
+  .game-entry button {
+    margin-left:0.5rem;
+  }
+  .platform-links ul {
+    display:flex; justify-content:center; gap:1rem;
+    padding-left:0;
+  }
+  .platform-links ul li a {
+    padding:0.3rem 0.7rem;
+    background:#0077cc; border-radius:6px;
+  }
+  #json-download {
+    background:#00bb00;
+    margin-top:1rem;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  label {
+    font-weight: bold;
+    margin-top: 1rem;
+    display: block;
+  }
+</style>
 </head>
 <body>
-
 <header>
-  <h1>Toporak Oyun Sitesi</h1>
+  <h1>Toporak</h1>
 </header>
-
 <main>
-
   <section id="main-page">
-    <h2>Oyun Serilerimiz</h2>
+    <h2>2025 yılında kurulan Toporak, yazılım ve teknoloji geliştirmeye odaklanmıştır.</h2>
+    <h3>Oyun Serilerimiz</h3>
     <div id="series-buttons"></div>
-
-    <h2>Oyunlar</h2>
-    <div id="game-list"></div>
   </section>
 
-  <section id="game-details" style="display:none;">
-    <button onclick="closeGameDetails()" style="float:right; background:#cc0033;">Kapat</button>
-    <h2 id="detail-name"></h2>
-    <img id="detail-image" alt="Oyun Görseli" />
-    <p><strong>Seri:</strong> <span id="detail-series"></span></p>
-    <p><strong>Etiketler:</strong> <span id="detail-tags"></span></p>
-    <div id="platform-links">
-      <h3>İndir</h3>
-      <ul>
-        <li><a href="#" target="_blank" onclick="countDownload('android')">Android (<span id="count-android">0</span>)</a></li>
-        <li><a href="#" target="_blank" onclick="countDownload('ios')">iOS (<span id="count-ios">0</span>)</a></li>
-        <li><a href="#" target="_blank" onclick="countDownload('windows')">Windows (<span id="count-windows">0</span>)</a></li>
-        <li><a href="#" target="_blank" onclick="countDownload('macos')">macOS (<span id="count-macos">0</span>)</a></li>
-      </ul>
-    </div>
-    <div id="comments-section">
-      <h3>Kullanıcı Yorumları</h3>
-      <div id="comments"></div>
-      <textarea id="new-comment" rows="3" placeholder="Yorumunu yaz..." ></textarea>
-      <button onclick="addComment()">Yorum Ekle</button>
-    </div>
+  <section id="series-page">
+    <button onclick="backToMain()">← Ana Sayfa</button>
+    <h2 id="series-title">Seri Oyunları</h2>
+    <div id="series-buttons-container"></div>
+    <div class="platform-links" id="platform-links"></div>
+  </section>
+
+  <section id="game-detail-page">
+    <button onclick="backToSeries()">← Seriye Geri Dön</button>
+    <h2 id="game-detail-title"></h2>
+    <img id="game-image" src="" alt="" style="max-width:300px; margin:1rem auto; display:block; border-radius:12px;"/>
+    <p id="game-description" style="max-width:600px; margin:auto;"></p>
+    <div class="platform-links" id="game-platform-links"></div>
+    <p><strong>İndirme Sayacı:</strong> <span id="download-count">0</span></p>
+    <h3>Kullanıcı Yorumları</h3>
+    <ul id="comments-list" style="max-width:600px; margin:auto; text-align:left;"></ul>
+    <textarea id="comment-input" placeholder="Yorum yazınız..."></textarea>
+    <button onclick="addComment()">Yorum Ekle</button>
   </section>
 
   <section id="admin-panel">
+    <button onclick="closeAdmin()">× Kapat</button>
     <h2>Admin Paneli</h2>
-    <h3>Seri Ekle</h3>
+
+    <h3>Yeni Seri Ekle</h3>
     <input type="text" id="new-series" placeholder="Yeni Seri Adı" />
+
+    <h3>Yeni Oyun Ekle</h3>
+    <select id="game-series-select">
+      <option value="">Lütfen Seri Seçiniz</option>
+    </select>
+    <input type="text" id="game-name" placeholder="Oyun Adı" required />
+    <input type="url" id="game-image-url" placeholder="Görsel URL'si" required />
+    <textarea id="game-description-input" placeholder="Oyun Açıklaması (isteğe bağlı)"></textarea>
+    <input type="url" id="android-link" placeholder="Android İndirme Linki" required />
+    <input type="url" id="ios-link" placeholder="iOS İndirme Linki" required />
+    <input type="url" id="windows-link" placeholder="Windows İndirme Linki" required />
+    <input type="url" id="macos-link" placeholder="macOS İndirme Linki" required />
+
     <button onclick="addSeries()">Seri Ekle</button>
+    <button onclick="addGame()">Oyun Ekle</button>
 
-    <h3>Oyun Ekle / Düzenle</h3>
-    <form id="game-form" onsubmit="return saveGame(event)">
-      <input type="hidden" id="edit-index" value="-1" />
-      <label for="game-name">Oyun Adı (zorunlu)</label>
-      <input type="text" id="game-name" required />
+    <h3>Oyunlar</h3>
+    <div id="admin-games-list" style="max-height:300px; overflow-y:auto;"></div>
 
-      <label for="game-series-select">Seri Seç (zorunlu)</label>
-      <select id="game-series-select" required></select>
-
-      <label for="game-tags">Etiketler (virgülle ayır)</label>
-      <input type="text" id="game-tags" placeholder="Aksiyon, Macera, vs." />
-
-      <label for="game-image">Görsel Yükle (PNG, JPG)</label>
-      <input type="file" id="game-image" accept="image/png, image/jpeg" />
-
-      <label for="android-link">Android Linki</label>
-      <input type="url" id="android-link" placeholder="https://..." />
-
-      <label for="ios-link">iOS Linki</label>
-      <input type="url" id="ios-link" placeholder="https://..." />
-
-      <label for="windows-link">Windows Linki</label>
-      <input type="url" id="windows-link" placeholder="https://..." />
-
-      <label for="macos-link">macOS Linki</label>
-      <input type="url" id="macos-link" placeholder="https://..." />
-
-      <button type="submit" id="save-btn">Ekle</button>
-      <button type="button" onclick="cancelEdit()" style="background:#cc0033;">İptal</button>
-    </form>
+    <h3>JSON Dosyasını İndir</h3>
+    <button id="json-download" onclick="downloadJson()" style="display:none;">JSON İndir</button>
+    <textarea id="json-output" readonly style="width:100%; max-height:300px; display:none;"></textarea>
   </section>
-
 </main>
 
 <footer>
   <small>&copy; 2025 Toporak</small>
-  <button id="secret-admin-btn" title="Admin Girişi" onclick="promptAdminAccess()"></button>
+  <button id="secret-admin-btn" onclick="promptAdminAccess()">Admin</button>
 </footer>
 
 <script>
-  // Veri modelleri
-  let seriesList = JSON.parse(localStorage.getItem('seriesList')) || [];
-  let gamesList = JSON.parse(localStorage.getItem('gamesList')) || [];
-
-  // Yorumlar oyun ismine göre
-  let commentsData = JSON.parse(localStorage.getItem('commentsData')) || {};
-
-  // Şu an detayda görünen oyun indeksi
-  let currentGameIndex = null;
-
-  // Admin durumu
-  let isAdmin = false;
-
-  // --- Sayfa yüklenirken ---
-  window.onload = () => {
-    refreshSeriesButtons();
-    refreshGameList();
-    refreshAdminSeriesSelect();
+  // Veri yapı ve değişkenler
+  let data = {
+    series: [], // ["RütbeX", "Diğer Seri"]
+    games: [
+      /* {
+        name:"Örnek Oyun",
+        series:"RütbeX",
+        image:"",
+        description:"",
+        android:"",
+        ios:"",
+        windows:"",
+        macos:"",
+        downloadCount:0,
+        comments:[]
+      } */
+    ]
   };
 
-  // Seri butonlarını güncelle
-  function refreshSeriesButtons() {
-    const container = document.getElementById('series-buttons');
-    container.innerHTML = '';
+  let currentSeries = null;
+  let currentGame = null;
+  let isAdmin = false;
 
-    // Tüm seriler butonu
-    const allBtn = document.createElement('button');
-    allBtn.textContent = 'Tüm Seriler';
-    allBtn.onclick = () => {
-      refreshGameList();
-    };
-    container.appendChild(allBtn);
+  // LocalStorage'dan yükle (yeni sistemde bunu kullanma, manuel JSON ile yapacağız)
+  /*
+  function loadData() {
+    const raw = localStorage.getItem("toporakData");
+    if(raw) data = JSON.parse(raw);
+  }
+  function saveData() {
+    localStorage.setItem("toporakData", JSON.stringify(data));
+  }
+  */
 
-    seriesList.forEach(serie => {
-      const btn = document.createElement('button');
-      btn.textContent = serie;
-      btn.onclick = () => refreshGameList(serie);
+  // GitHub'dan JSON çekmek için URL
+  // Buraya GitHub raw linkini yazmalısın:
+  const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/username/repository/branch/";
+
+  // Örnek: "RütbeX.json"
+  function fetchData() {
+    // Tüm serileri ayrı dosya olarak alacağız, ilk olarak "seriesList.json" dosyası olabilir.
+    fetch(GITHUB_RAW_BASE + "seriesList.json")
+      .then(res => res.json())
+      .then(seriesList => {
+        data.series = seriesList;
+        updateSeriesButtons();
+        // Seri ilk seçildiğinde o seriye ait oyunlar JSON olarak çekilecek
+        // Örnek: "RutbeX_games.json"
+      }).catch(e=>{
+        alert("Veri çekme hatası! GitHub bağlantısını kontrol et.");
+        console.error(e);
+      });
+  }
+
+  // Seri butonları oluştur
+  function updateSeriesButtons() {
+    const container = document.getElementById("series-buttons");
+    container.innerHTML = "";
+    data.series.forEach(s=>{
+      const btn = document.createElement("button");
+      btn.textContent = s;
+      btn.onclick = () => openSeriesPage(s);
       container.appendChild(btn);
     });
   }
 
-  // Oyun listesini güncelle (opsiyonel seri filtreli)
-  function refreshGameList(filterSeries) {
-    const container = document.getElementById('game-list');
-    container.innerHTML = '';
+  // Seri sayfası aç
+  function openSeriesPage(series) {
+    currentSeries = series;
+    document.getElementById("main-page").style.display = "none";
+    document.getElementById("series-page").style.display = "block";
+    document.getElementById("series-title").textContent = series + " Oyunları";
+    loadGamesForSeries(series);
+  }
 
-    let filteredGames = filterSeries ? gamesList.filter(g => g.series === filterSeries) : gamesList;
+  // Seri oyunlarını GitHub'dan JSON olarak çek
+  function loadGamesForSeries(series) {
+    fetch(GITHUB_RAW_BASE + series + "_games.json")
+      .then(res => res.json())
+      .then(games => {
+        data.games = games;
+        updateSeriesGamesList();
+      })
+      .catch(e=>{
+        data.games = [];
+        updateSeriesGamesList();
+      });
+  }
 
-    if(filteredGames.length === 0){
-      container.innerHTML = '<p>Oyun bulunamadı.</p>';
-      return;
-    }
+  // Seri oyunlarını listele
+  function updateSeriesGamesList() {
+    const container = document.getElementById("series-buttons-container");
+    container.innerHTML = "";
+    data.games.forEach(game=>{
+      if(game.series !== currentSeries) return;
+      const div = document.createElement("div");
+      div.className = "game-entry";
 
-    filteredGames.forEach((game,i) => {
-      const btn = document.createElement('button');
+      const btn = document.createElement("button");
       btn.textContent = game.name;
-      btn.onclick = () => showGameDetails(i);
-      container.appendChild(btn);
+      btn.onclick = () => openGameDetail(game);
+
+      div.appendChild(btn);
+      container.appendChild(div);
     });
   }
 
-  // Oyun detaylarını göster
-  function showGameDetails(index) {
-    currentGameIndex = index;
-    const game = gamesList[index];
-    if(!game) return;
-
-    document.getElementById('main-page').style.display = 'none';
-    document.getElementById('game-details').style.display = 'block';
-
-    document.getElementById('detail-name').textContent = game.name;
-    document.getElementById('detail-series').textContent = game.series;
-    document.getElementById('detail-tags').textContent = game.tags ? game.tags.join(', ') : '-';
-
-    if(game.image){
-      document.getElementById('detail-image').src = game.image;
-      document.getElementById('detail-image').style.display = 'block';
-    } else {
-      document.getElementById('detail-image').style.display = 'none';
-    }
-
-    // Platform linkleri ve sayaçları
-    ['android','ios','windows','macos'].forEach(platform => {
-      const countSpan = document.getElementById(`count-${platform}`);
-      countSpan.textContent = game.downloadCount && game.downloadCount[platform] ? game.downloadCount[platform] : 0;
-      const link = document.querySelector(`#platform-links a[href='${game[platform] || '#'}']`);
-      if(link){
-        link.href = game[platform];
-        link.target = '_blank';
-      }
-    });
-
-    // Yorumları göster
-    renderComments();
+  // Ana sayfaya geri dön
+  function backToMain() {
+    currentSeries = null;
+    currentGame = null;
+    document.getElementById("series-page").style.display = "none";
+    document.getElementById("main-page").style.display = "block";
+    clearGameDetail();
   }
 
-  // Detay sayfasını kapat
-  function closeGameDetails() {
-    currentGameIndex = null;
-    document.getElementById('game-details').style.display = 'none';
-    document.getElementById('main-page').style.display = 'block';
+  // Oyunun detay sayfası aç
+  function openGameDetail(game) {
+    currentGame = game;
+    incrementDownloadCount(game);
+    document.getElementById("series-page").style.display = "none";
+    document.getElementById("game-detail-page").style.display = "block";
+    document.getElementById("game-detail-title").textContent = game.name;
+    document.getElementById("game-image").src = game.image || "";
+    document.getElementById("game-image").alt = game.name;
+    document.getElementById("game-description").textContent = game.description || "Açıklama yok.";
+    showPlatformLinks(game);
+    updateDownloadCount(game);
+    updateComments(game);
   }
 
-  // İndirme sayacı arttır
-  function countDownload(platform) {
-    if(currentGameIndex === null) return;
-    let game = gamesList[currentGameIndex];
-    if(!game.downloadCount) game.downloadCount = {};
-    if(!game.downloadCount[platform]) game.downloadCount[platform] = 0;
-    game.downloadCount[platform]++;
-    saveGamesList();
-    // Güncel sayaç güncelle
-    document.getElementById(`count-${platform}`).textContent = game.downloadCount[platform];
+  // Oyundan detay sayfasına geri dön
+  function backToSeries() {
+    currentGame = null;
+    document.getElementById("game-detail-page").style.display = "none";
+    document.getElementById("series-page").style.display = "block";
+    clearCommentInput();
   }
 
-  // Yorumları renderla
-  function renderComments() {
-    if(currentGameIndex === null) return;
-    const game = gamesList[currentGameIndex];
-    const commentBox = document.getElementById('comments');
-    commentBox.innerHTML = '';
-    const gameComments = commentsData[game.name] || [];
-    if(gameComments.length === 0){
-      commentBox.innerHTML = '<p>Henüz yorum yok.</p>';
-      return;
-    }
-    gameComments.forEach(c => {
-      const div = document.createElement('div');
-      div.className = 'comment';
-      div.textContent = c;
-      commentBox.appendChild(div);
-    });
+  // Platform linklerini göster
+  function showPlatformLinks(game) {
+    const container = document.getElementById("game-platform-links");
+    container.innerHTML = `
+      <ul>
+        <li><a href="${game.android}" target="_blank">Android</a></li>
+        <li><a href="${game.ios}" target="_blank">iOS</a></li>
+        <li><a href="${game.windows}" target="_blank">Windows</a></li>
+        <li><a href="${game.macos}" target="_blank">macOS</a></li>
+      </ul>
+    `;
   }
 
-  // Yeni yorum ekle
+  // İndirme sayacını artır (burada localStorage olarak geçici tutuyoruz)
+  function incrementDownloadCount(game) {
+    const key = "downloadCount_" + game.name.replace(/\s+/g, "_");
+    let count = parseInt(localStorage.getItem(key) || "0");
+    count++;
+    localStorage.setItem(key, count);
+    game.downloadCount = count;
+  }
+  function updateDownloadCount(game) {
+    const key = "downloadCount_" + game.name.replace(/\s+/g, "_");
+    let count = parseInt(localStorage.getItem(key) || "0");
+    document.getElementById("download-count").textContent = count;
+  }
+
+  // Yorum ekle
   function addComment() {
-    if(currentGameIndex === null) return alert('Lütfen önce bir oyun seçin.');
-    const textarea = document.getElementById('new-comment');
-    const val = textarea.value.trim();
-    if(!val) return alert('Boş yorum eklenemez.');
-    const game = gamesList[currentGameIndex];
-    if(!commentsData[game.name]) commentsData[game.name] = [];
-    commentsData[game.name].push(val);
-    localStorage.setItem('commentsData', JSON.stringify(commentsData));
-    textarea.value = '';
-    renderComments();
+    const commentInput = document.getElementById("comment-input");
+    const commentText = commentInput.value.trim();
+    if(!commentText) return alert("Lütfen yorum yazınız.");
+    if(!currentGame) return alert("Oyun seçili değil.");
+
+    if(!currentGame.comments) currentGame.comments = [];
+    currentGame.comments.push(commentText);
+    updateComments(currentGame);
+    commentInput.value = "";
   }
 
-  // --- Admin işlemleri ---
+  // Yorumları göster
+  function updateComments(game) {
+    const ul = document.getElementById("comments-list");
+    ul.innerHTML = "";
+    if(!game.comments || game.comments.length === 0){
+      ul.innerHTML = "<li>Henüz yorum yok.</li>";
+      return;
+    }
+    game.comments.forEach(c=>{
+      const li = document.createElement("li");
+      li.textContent = c;
+      ul.appendChild(li);
+    });
+  }
 
-  // Admin erişim isteği
+  function clearCommentInput() {
+    document.getElementById("comment-input").value = "";
+  }
+
+  // Admin işlemleri
   function promptAdminAccess() {
-    if(isAdmin){
-      isAdmin = false;
-      document.getElementById('admin-panel').style.display = 'none';
-      alert('Admin çıkışı yapıldı.');
-      return;
-    }
-    const code = prompt('Admin kodunu gir:');
-    if(code === '29042113' || code === '66698688'){
+    const code = prompt("Admin kodunu giriniz:");
+    if(code === "29042113" || code === "66698688"){
       isAdmin = true;
-      document.getElementById('admin-panel').style.display = 'block';
-      refreshAdminSeriesSelect();
-      alert('Admin girişi başarılı.');
+      document.getElementById("admin-panel").style.display = "block";
+      populateSeriesSelect();
+      refreshAdminGamesList();
+      alert("Admin paneline hoş geldiniz.");
     } else {
-      alert('Hatalı kod!');
+      alert("Hatalı kod!");
     }
   }
 
-  // Seri ekle
-  function addSeries() {
-    const newSeries = document.getElementById('new-series').value.trim();
-    if(!newSeries) return alert('Lütfen seri adı girin.');
-    if(seriesList.includes(newSeries)) return alert('Bu seri zaten var.');
-    seriesList.push(newSeries);
-    seriesList.sort();
-    saveSeriesList();
-    document.getElementById('new-series').value = '';
-    refreshSeriesButtons();
-    refreshAdminSeriesSelect();
+  function closeAdmin(){
+    isAdmin = false;
+    document.getElementById("admin-panel").style.display = "none";
   }
 
-  // Admin için seri seçim kutusunu güncelle
-  function refreshAdminSeriesSelect() {
-    const select = document.getElementById('game-series-select');
-    select.innerHTML = '';
-    if(seriesList.length === 0){
-      const opt = document.createElement('option');
-      opt.value = '';
-      opt.textContent = 'Önce seri ekleyin';
-      select.appendChild(opt);
-      return;
-    }
-    const defaultOpt = document.createElement('option');
-    defaultOpt.value = '';
-    defaultOpt.textContent = 'Seri seçin';
-    select.appendChild(defaultOpt);
-    seriesList.forEach(s => {
-      const opt = document.createElement('option');
+  function addSeries(){
+    const input = document.getElementById("new-series");
+    const newS = input.value.trim();
+    if(!newS) return alert("Seri adı boş olamaz.");
+    if(data.series.includes(newS)) return alert("Bu seri zaten var.");
+    data.series.push(newS);
+    input.value = "";
+    populateSeriesSelect();
+    updateSeriesButtons();
+  }
+
+  function populateSeriesSelect(){
+    const select = document.getElementById("game-series-select");
+    select.innerHTML = '<option value="">Lütfen Seri Seçiniz</option>';
+    data.series.forEach(s=>{
+      const opt = document.createElement("option");
       opt.value = s;
       opt.textContent = s;
       select.appendChild(opt);
     });
   }
 
-  // Oyun ekle / düzenle formunu kaydet
-  function saveGame(event) {
-    event.preventDefault();
-    if(!isAdmin) return alert('Admin değilsiniz!');
+  function addGame(){
+    if(!isAdmin) return alert("Admin değilsiniz!");
+    const name = document.getElementById("game-name").value.trim();
+    const series = document.getElementById("game-series-select").value;
+    const image = document.getElementById("game-image-url").value.trim();
+    const description = document.getElementById("game-description-input").value.trim();
+    const android = document.getElementById("android-link").value.trim();
+    const ios = document.getElementById("ios-link").value.trim();
+    const windows = document.getElementById("windows-link").value.trim();
+    const macos = document.getElementById("macos-link").value.trim();
 
-    const editIndex = parseInt(document.getElementById('edit-index').value, 10);
-    const name = document.getElementById('game-name').value.trim();
-    const series = document.getElementById('game-series-select').value;
-    const tagsRaw = document.getElementById('game-tags').value.trim();
-    const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(t => t) : [];
-    const android = document.getElementById('android-link').value.trim();
-    const ios = document.getElementById('ios-link').value.trim();
-    const windows = document.getElementById('windows-link').value.trim();
-    const macos = document.getElementById('macos-link').value.trim();
-
-    if(!name || !series){
-      return alert('Oyun adı ve seri seçimi zorunlu.');
+    if(!name || !series || !image || !android || !ios || !windows || !macos){
+      return alert("Lütfen tüm zorunlu alanları doldurun.");
     }
 
-    // Görseli base64 olarak al
-    const fileInput = document.getElementById('game-image');
-    if(fileInput.files.length > 0){
-      const reader = new FileReader();
-      reader.onload = function(e){
-        const base64img = e.target.result;
-        saveGameToList(editIndex, name, series, tags, base64img, android, ios, windows, macos);
-      };
-      reader.readAsDataURL(fileInput.files[0]);
-    } else {
-      // Görsel seçilmemiş ise eski görsel kalabilir düzenlemede
-      let existingImg = null;
-      if(editIndex >= 0 && gamesList[editIndex]) existingImg = gamesList[editIndex].image || null;
-      saveGameToList(editIndex, name, series, tags, existingImg, android, ios, windows, macos);
+    // Aynı isimde oyun varsa engelle
+    if(data.games.some(g => g.name.toLowerCase() === name.toLowerCase())){
+      return alert("Aynı isimde bir oyun zaten mevcut.");
     }
-    return false;
-  }
 
-  // Oyun kaydetme işlemi (listeye ekleme veya güncelleme)
-  function saveGameToList(editIndex, name, series, tags, image, android, ios, windows, macos){
-    if(editIndex >= 0){
-      // Düzenleme
-      gamesList[editIndex] = {
-        ...gamesList[editIndex],
-        name, series, tags, image, android, ios, windows, macos
-      };
-      alert('Oyun güncellendi.');
-    } else {
-      // Yeni oyun ekleme
-      gamesList.push({
-        name, series, tags, image, android, ios, windows, macos, downloadCount: {}
-      });
-      alert('Oyun eklendi.');
-    }
-    saveGamesList();
-    refreshGameList();
-    refreshAdminSeriesSelect();
+    const newGame = {
+      name, series, image, description,
+      android, ios, windows, macos,
+      downloadCount: 0,
+      comments: []
+    };
+    data.games.push(newGame);
+    refreshAdminGamesList();
     clearGameForm();
+    alert("Oyun eklendi. JSON oluşturup indirin!");
+    showJsonDownloadButton();
   }
 
-  // Oyunları kaydet localStorage'a
-  function saveGamesList() {
-    localStorage.setItem('gamesList', JSON.stringify(gamesList));
+  function clearGameForm(){
+    document.getElementById("game-name").value = "";
+    document.getElementById("game-series-select").value = "";
+    document.getElementById("game-image-url").value = "";
+    document.getElementById("game-description-input").value = "";
+    document.getElementById("android-link").value = "";
+    document.getElementById("ios-link").value = "";
+    document.getElementById("windows-link").value = "";
+    document.getElementById("macos-link").value = "";
   }
 
-  // Serileri kaydet localStorage'a
-  function saveSeriesList() {
-    localStorage.setItem('seriesList', JSON.stringify(seriesList));
-  }
-
-  // Formu temizle
-  function clearGameForm() {
-    document.getElementById('edit-index').value = '-1';
-    document.getElementById('game-name').value = '';
-    document.getElementById('game-series-select').value = '';
-    document.getElementById('game-tags').value = '';
-    document.getElementById('game-image').value = '';
-    document.getElementById('android-link').value = '';
-    document.getElementById('ios-link').value = '';
-    document.getElementById('windows-link').value = '';
-    document.getElementById('macos-link').value = '';
-    document.getElementById('save-btn').textContent = 'Ekle';
-  }
-
-  // Düzenleme için formu doldur
-  function editGame(index) {
-    if(!isAdmin) return alert('Admin değilsiniz!');
-    const game = gamesList[index];
-    if(!game) return;
-    document.getElementById('edit-index').value = index;
-    document.getElementById('game-name').value = game.name;
-    document.getElementById('game-series-select').value = game.series;
-    document.getElementById('game-tags').value = game.tags ? game.tags.join(', ') : '';
-    document.getElementById('game-image').value = '';
-    document.getElementById('android-link').value = game.android || '';
-    document.getElementById('ios-link').value = game.ios || '';
-    document.getElementById('windows-link').value = game.windows || '';
-    document.getElementById('macos-link').value = game.macos || '';
-    document.getElementById('save-btn').textContent = 'Güncelle';
-    scrollTo(0,document.body.scrollHeight);
-  }
-
-  // Düzenlemeyi iptal et
-  function cancelEdit() {
-    clearGameForm();
-  }
-
-  // Oyun silme
-  function deleteGame(index) {
-    if(!isAdmin) return alert('Admin değilsiniz!');
-    if(!confirm('Bu oyunu silmek istediğinize emin misiniz?')) return;
-    gamesList.splice(index,1);
-    saveGamesList();
-    refreshGameList();
-  }
-
-  // --- UI güncellemeleri ---
-
-  // Seri butonları güncelle (admin panel ve ana liste için)
-  function refreshUI() {
-    refreshSeriesButtons();
-    refreshGameList();
-    refreshAdminSeriesSelect();
-  }
-
-  // Yeni oyun listesinde, sil ve düzenle butonları da göster (admin için)
-  function refreshGameList(filterSeries) {
-    const container = document.getElementById('game-list');
-    container.innerHTML = '';
-
-    let filteredGames = filterSeries ? gamesList.filter(g => g.series === filterSeries) : gamesList;
-
-    if(filteredGames.length === 0){
-      container.innerHTML = '<p>Oyun bulunamadı.</p>';
+  // Admin oyun listesi yenile
+  function refreshAdminGamesList(){
+    const container = document.getElementById("admin-games-list");
+    container.innerHTML = "";
+    if(data.games.length === 0){
+      container.textContent = "Henüz oyun yok.";
       return;
     }
+    data.games.forEach((game,i)=>{
+      const div = document.createElement("div");
+      div.style.display = "flex";
+      div.style.justifyContent = "space-between";
+      div.style.alignItems = "center";
+      div.style.padding = "0.2rem 0";
 
-    filteredGames.forEach((game,i) => {
-      const btn = document.createElement('button');
-      btn.textContent = game.name;
-      btn.onclick = () => showGameDetails(i);
-      container.appendChild(btn);
+      const span = document.createElement("span");
+      span.textContent = `${game.name} (${game.series})`;
+      div.appendChild(span);
 
-      if(isAdmin){
-        // Düzenle butonu
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Düzenle';
-        editBtn.style.background = '#ffaa00';
-        editBtn.style.color = '#000';
-        editBtn.onclick = (e) => {
-          e.stopPropagation();
-          editGame(i);
-        };
-        container.appendChild(editBtn);
+      // Düzenle butonu
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Düzenle";
+      editBtn.onclick = () => editGame(i);
+      div.appendChild(editBtn);
 
-        // Sil butonu
-        const delBtn = document.createElement('button');
-        delBtn.textContent = 'Sil';
-        delBtn.style.background = '#cc0033';
-        delBtn.onclick = (e) => {
-          e.stopPropagation();
+      // Sil butonu
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Sil";
+      delBtn.style.background = "#cc0033";
+      delBtn.onclick = () => {
+        if(confirm("Oyu silmek istediğinize emin misiniz?")){
           deleteGame(i);
-        };
-        container.appendChild(delBtn);
-      }
+        }
+      };
+      div.appendChild(delBtn);
+
+      container.appendChild(div);
     });
   }
 
-  // Sayfa yüklendiğinde UI güncelle
+  // Oyun düzenleme fonksiyonu
+  function editGame(index){
+    if(!isAdmin) return alert("Admin değilsiniz!");
+    const game = data.games[index];
+    document.getElementById("game-name").value = game.name;
+    document.getElementById("game-series-select").value = game.series;
+    document.getElementById("game-image-url").value = game.image;
+    document.getElementById("game-description-input").value = game.description;
+    document.getElementById("android-link").value = game.android;
+    document.getElementById("ios-link").value = game.ios;
+    document.getElementById("windows-link").value = game.windows;
+    document.getElementById("macos-link").value = game.macos;
+
+    // Sil önceki kayıt
+    data.games.splice(index,1);
+    refreshAdminGamesList();
+    alert("Değişikliklerinizi yaptıktan sonra 'Oyun Ekle'ye basınız.");
+    showJsonDownloadButton();
+  }
+
+  // Oyun silme
+  function deleteGame(index){
+    if(!isAdmin) return alert("Admin değilsiniz!");
+    data.games.splice(index,1);
+    refreshAdminGamesList();
+    alert("Oyun silindi.");
+    showJsonDownloadButton();
+  }
+
+  // JSON metni oluştur ve indir
+  function generateJsonText(){
+    // Her seriye ait oyunları gruplamak için:
+    let grouped = {};
+    data.series.forEach(s=>{
+      grouped[s] = data.games.filter(g=>g.series===s);
+    });
+    return JSON.stringify(grouped, null, 2);
+  }
+
+  function downloadJson(){
+    const jsonText = generateJsonText();
+    const blob = new Blob([jsonText], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "toporak_games.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function showJsonDownloadButton(){
+    document.getElementById("json-download").style.display = "inline-block";
+  }
+
+  // Sayfa yüklenince ana sayfa ve admin seçimlerini hazırla
   window.onload = () => {
-    refreshUI();
-  };
+    // Şimdilik localStorage değil, GitHub'dan fetch mantığı eklenecek
+    // Demo için sabit seri ve oyunlar koyabiliriz:
+    if(data.series.length === 0){
+      data.series = ["RütbeX", "Macera", "Strateji"];
+    }
+    if(data.games.length === 0){
+      data.games.push({
+        name:"Demo Oyun",
+        series:"RütbeX",
+        image:"https://via.placeholder.com/300x150?text=Demo+Oyun",
+        description:"Bu bir demo oyun açıklamasıdır.",
+        android:"#", ios:"#", windows:"#", macos:"#",
+        downloadCount:0,
+        comments:[]
+      });
+    }
+    updateSeriesButtons();
+  }
 </script>
 
 </body>

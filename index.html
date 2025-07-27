@@ -102,7 +102,7 @@
       <h2>Admin Paneli</h2>
       <form onsubmit="addGame(event)">
         <input type="text" id="new-series" placeholder="Yeni Seri Ekle (opsiyonel)" />
-        <select id="game-series" ></select>
+        <select id="game-series"></select>
         <input type="text" id="game-name" placeholder="Oyun Adı" required />
         <input type="url" id="android-link" placeholder="Android Linki" required />
         <input type="url" id="ios-link" placeholder="iOS Linki" required />
@@ -136,6 +136,10 @@
 
       const select = document.getElementById("game-series");
       select.innerHTML = "";
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.innerText = "Seri Seçin";
+      select.appendChild(defaultOption);
       seriesSet.forEach(series => {
         const option = document.createElement("option");
         option.value = series;
@@ -166,7 +170,14 @@
         delBtn.innerText = "Sil";
         delBtn.style.background = "#cc0033";
         delBtn.style.marginLeft = "1rem";
-        delBtn.onclick = () => deleteGame(g.name);
+        delBtn.onclick = () => {
+          const code = prompt("Silmek için admin kodunu gir:");
+          if (code === "29042113" || code === "66698688") {
+            deleteGame(g.name);
+          } else {
+            alert("Hatalı kod!");
+          }
+        };
 
         div.appendChild(btn);
         div.appendChild(editBtn);
@@ -203,23 +214,17 @@
       const name = document.getElementById('game-name').value.trim();
       const newSeries = document.getElementById('new-series').value.trim();
       const selectEl = document.getElementById('game-series');
-
-      if (newSeries !== "") {
-        selectEl.removeAttribute("required");
-      } else {
-        selectEl.setAttribute("required", "required");
-      }
-
       const series = newSeries || selectEl.value;
-      const android = document.getElementById('android-link').value.trim();
-      const ios = document.getElementById('ios-link').value.trim();
-      const windows = document.getElementById('windows-link').value.trim();
-      const macos = document.getElementById('macos-link').value.trim();
 
       if (!series) {
         alert("Lütfen bir seri adı girin veya seçin.");
         return;
       }
+
+      const android = document.getElementById('android-link').value.trim();
+      const ios = document.getElementById('ios-link').value.trim();
+      const windows = document.getElementById('windows-link').value.trim();
+      const macos = document.getElementById('macos-link').value.trim();
 
       addedGames.push({ name, android, ios, windows, macos, series });
       saveGames();
@@ -236,7 +241,6 @@
     }
 
     function deleteGame(name) {
-      if (!confirm(`${name} oyununu silmek istiyor musun?`)) return;
       addedGames = addedGames.filter(g => g.name !== name);
       saveGames();
       updateSeriesButtons();

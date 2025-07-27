@@ -63,7 +63,7 @@
       text-decoration: none;
     }
     a:hover { text-decoration: underline; }
-    #rutbex-page, #admin-panel { display: none; }
+    #series-page, #admin-panel { display: none; }
     #platform-links { margin-top: 1.5rem; }
     #secret-admin-btn {
       position: absolute;
@@ -76,6 +76,9 @@
       height: 10px;
       cursor: pointer;
     }
+    .game-entry {
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -86,22 +89,20 @@
     <section id="main-page">
       <h2>2025 yılında kurulan Toporak, yazılım ve teknoloji geliştirmeye odaklanmıştır.</h2>
       <h3>Oyun Serilerimiz</h3>
-      <button onclick="goToRutbex()">RütbeX</button>
+      <div id="series-buttons"></div>
     </section>
 
-    <section id="rutbex-page">
-      <h2>RütbeX Oyunları</h2>
-      <div id="rutbex-buttons"></div>
+    <section id="series-page">
+      <h2 id="series-title">Seri Oyunları</h2>
+      <div id="series-buttons-container"></div>
       <div id="platform-links"></div>
     </section>
 
     <section id="admin-panel">
       <h2>Admin Paneli</h2>
       <form onsubmit="addGame(event)">
-        <select id="game-series" required>
-          <option value="rutbex">RütbeX</option>
-          <option value="diğer">Diğer</option>
-        </select>
+        <input type="text" id="new-series" placeholder="Yeni Seri Ekle (opsiyonel)" />
+        <select id="game-series" required></select>
         <input type="text" id="game-name" placeholder="Oyun Adı" required />
         <input type="url" id="android-link" placeholder="Android Linki" required />
         <input type="url" id="ios-link" placeholder="iOS Linki" required />
@@ -116,24 +117,75 @@
     <button id="secret-admin-btn" onclick="promptAdminAccess()">Admin</button>
   </footer>
   <script>
-    const addedGames = JSON.parse(localStorage.getItem("addedGames")) || [];
+    let addedGames = JSON.parse(localStorage.getItem("addedGames")) || [];
 
-    function goToRutbex() {
+    function saveGames() {
+      localStorage.setItem("addedGames", JSON.stringify(addedGames));
+    }
+
+    function updateSeriesButtons() {
+      const container = document.getElementById("series-buttons");
+      container.innerHTML = "";
+      const seriesSet = new Set(addedGames.map(g => g.series));
+      seriesSet.forEach(series => {
+        const btn = document.createElement("button");
+        btn.innerText = series;
+        btn.onclick = () => goToSeries(series);
+        container.appendChild(btn);
+      });
+
+      // Admin paneldeki select'i güncelle
+      const select = document.getElementById("game-series");
+      select.innerHTML = "";
+      seriesSet.forEach(series => {
+        const option = document.createElement("option");
+        option.value = series;
+        option.innerText = series;
+        select.appendChild(option);
+      });
+    }
+
+    function goToSeries(series) {
       document.getElementById('main-page').style.display = 'none';
-      document.getElementById('rutbex-page').style.display = 'block';
-      updateRutbexButtons();
+      document.getElementById('series-page').style.display = 'block';
+      document.getElementById('series-title').innerText = `${series} Oyunları`;
+      const btnContainer = document.getElementById("series-buttons-container");
+      btnContainer.innerHTML = "";
+      addedGames.filter(g => g.series === series).forEach(g => {
+        const div = document.createElement("div");
+        div.className = "game-entry";
+        const btn = document.createElement("button");
+        btn.innerText = g.name;
+        btn.onclick = () => showPlatforms(g.name);
+
+        const editBtn = document.createElement("button");
+        editBtn.innerText = "Düzenle";
+        editBtn.style.marginLeft = "1rem";
+        editBtn.onclick = () => editGame(g);
+
+        const delBtn = document.createElement("button");
+        delBtn.innerText = "Sil";
+        delBtn.style.background = "#cc0033";
+        delBtn.style.marginLeft = "1rem";
+        delBtn.onclick = () => deleteGame(g.name);
+
+        div.appendChild(btn);
+        div.appendChild(editBtn);
+        div.appendChild(delBtn);
+        btnContainer.appendChild(div);
+      });
     }
 
     function showPlatforms(game) {
-      const platforms = addedGames.find(g => g.name === game);
-      if (!platforms) return alert("Bu oyun için veri bulunamadı.");
+      const g = addedGames.find(g => g.name === game);
+      if (!g) return alert("Bu oyun için veri bulunamadı.");
       const html = `
         <h3>${game} Platformları</h3>
         <ul>
-          <li><a href="${platforms.android}" target="_blank">Android</a></li>
-          <li><a href="${platforms.ios}" target="_blank">iOS</a></li>
-          <li><a href="${platforms.windows}" target="_blank">Windows</a></li>
-          <li><a href="${platforms.macos}" target="_blank">macOS</a></li>
+          <li><a href="${g.android}" target="_blank">Android</a></li>
+          <li><a href="${g.ios}" target="_blank">iOS</a></li>
+          <li><a href="${g.windows}" target="_blank">Windows</a></li>
+          <li><a href="${g.macos}" target="_blank">macOS</a></li>
         </ul>`;
       document.getElementById('platform-links').innerHTML = html;
     }
@@ -150,29 +202,37 @@
     function addGame(event) {
       event.preventDefault();
       const name = document.getElementById('game-name').value;
-      const series = document.getElementById('game-series').value;
+      const newSeries = document.getElementById('new-series').value;
+      const series = newSeries || document.getElementById('game-series').value;
       const android = document.getElementById('android-link').value;
       const ios = document.getElementById('ios-link').value;
       const windows = document.getElementById('windows-link').value;
       const macos = document.getElementById('macos-link').value;
       addedGames.push({ name, android, ios, windows, macos, series });
-      localStorage.setItem("addedGames", JSON.stringify(addedGames));
+      saveGames();
       alert(`${name} oyunu eklendi!`);
-      updateRutbexButtons();
+      updateSeriesButtons();
     }
 
-    function updateRutbexButtons() {
-      const btnContainer = document.getElementById("rutbex-buttons");
-      btnContainer.innerHTML = "";
-      addedGames.filter(g => g.series === "rutbex").forEach(g => {
-        const btn = document.createElement("button");
-        btn.innerText = `RütbeX:${g.name}`;
-        btn.onclick = () => showPlatforms(g.name);
-        btnContainer.appendChild(btn);
-      });
+    function deleteGame(name) {
+      if (!confirm(`${name} oyununu silmek istiyor musun?`)) return;
+      addedGames = addedGames.filter(g => g.name !== name);
+      saveGames();
+      updateSeriesButtons();
     }
 
-    updateRutbexButtons();
+    function editGame(game) {
+      document.getElementById('game-name').value = game.name;
+      document.getElementById('android-link').value = game.android;
+      document.getElementById('ios-link').value = game.ios;
+      document.getElementById('windows-link').value = game.windows;
+      document.getElementById('macos-link').value = game.macos;
+      document.getElementById('game-series').value = game.series;
+      deleteGame(game.name);
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    updateSeriesButtons();
   </script>
 </body>
 </html>
